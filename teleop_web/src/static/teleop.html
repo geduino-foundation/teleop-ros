@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>  
+		
+		<title>Geduino Web Teleop</title>
+		
+		<script type="text/javascript">
+		
+			function moveForward() {
+				
+				// Invoke move forward endpoint
+				invokeTeleopEndPoint("forward");
+				
+			}
+	
+			function moveBack() {
+				
+				// Invoke move back endpoint
+				invokeTeleopEndPoint("back");
+				
+			}
+	
+			function rotateLeft() {
+				
+				// Invoke rotate left endpoint
+				invokeTeleopEndPoint("left");
+				
+			}
+	
+			function rotateRight() {
+				
+				// Invoke rotate right endpoint
+				invokeTeleopEndPoint("right");
+				
+			}
+	
+			function stop() {
+				
+				// Invoke stop endpoint
+				invokeTeleopEndPoint("stop");
+				
+			}
+	
+			function invokeTeleopEndPoint(cmd) {
+				
+				// Create request
+				var xhttp = new XMLHttpRequest();
+				
+				// Open and send
+				xhttp.open("POST", "/rest/teleop/" + cmd, true);
+				xhttp.send();
+				
+			}
+			
+			function updateDiagnosticsStatus() {
+				
+				// Create request
+				var xhttp = new XMLHttpRequest();
+					
+				// Set on ready state change
+				xhttp.onreadystatechange = function() {
+						
+						if (this.readyState == 4 && this.status == 200) {
+						
+							// Parse diagnostics as json
+							var diagnosticsStatus = JSON.parse(this.responseText);
+							
+							// Update view
+							document.getElementById("diagnostics_ok_cell").innerHTML = diagnosticsStatus.ok.length;
+							document.getElementById("diagnostics_warn_cell").innerHTML = diagnosticsStatus.warn.length;
+							document.getElementById("diagnostics_error_cell").innerHTML = diagnosticsStatus.error.length;
+							document.getElementById("diagnostics_stale_cell").innerHTML = diagnosticsStatus.stale.length;
+							
+						}
+						
+					};
+				
+				// Open and send
+				xhttp.open("GET", "/rest/diagnostics/status", true);
+				xhttp.send();
+				
+			}
+		
+		</script>
+		
+	</head>
+	
+	<body onload="setInterval(updateDiagnosticsStatus, 1000);">
+	
+		<h1>Geduino Web Teleop</h1>
+		
+		<table>
+			<tbody>
+				<tr>
+					<td><a href="#">Teleop</a></td>
+					<td><a href="diagnostics.html">Diagnostics</a></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<h2>Status</h2>
+		
+		<table>
+			<tbody>
+				<tr>
+					<td>Ok</td>
+					<td id="diagnostics_ok_cell">N/A</td>
+				</tr>
+				<tr>
+					<td>Warning</td>
+					<td id="diagnostics_warn_cell">N/A</td>
+				</tr>
+				<tr>
+					<td>Error</td>
+					<td id="diagnostics_error_cell">N/A</td>
+				</tr>
+				<tr>
+					<td>Stale</td>
+					<td id="diagnostics_stale_cell">N/A</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<h2>Teleop</h2>
+		
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td align="center">
+						<button type="button" onclick="moveForward()">Forward</button>
+					</td>
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<button type="button" onclick="rotateLeft()">Left</button>
+					</td>
+					<td align="center">
+						<button type="button" onclick="stop()">Stop</button>
+					</td>
+					<td align="center">
+						<button type="button" onclick="rotateRight()">Right</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td align="center">
+						<button type="button" onclick="moveBack()">Back</button>
+					</td>
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+	</body>
+	
+</html>

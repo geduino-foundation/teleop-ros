@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>  
+		
+		<title>Geduino Web Teleop</title>
+		
+		<script type="text/javascript">
+		
+			function updateDiagnosticsStatus() {
+				
+				// Invoke diagnostics end point
+				invokeDiagnosticEndPoint();
+				
+			}
+	
+			function updateDiagnosticsTable(tableBodyId, diagnosticsStatus) {
+					
+				// Get table body		
+				var tableBody = document.getElementById(tableBodyId);
+				
+				// Clear table content
+				tableBody.innerHTML = "";
+				
+				for (var key in diagnosticsStatus) {
+					
+					// Create row
+					var row = document.createElement("tr");
+					
+					// Create cells
+					var cell1 = document.createElement("td");
+					var cell2 = document.createElement("td");
+					
+					// Create text nodes
+					var textnode1=document.createTextNode(diagnosticsStatus[key].name);
+					var textnode2=document.createTextNode(diagnosticsStatus[key].message);
+					
+					// Append to html
+					cell1.appendChild(textnode1);
+					cell2.appendChild(textnode2);
+					row.appendChild(cell1);
+					row.appendChild(cell2);
+					tableBody.appendChild(row);
+					
+				}
+	
+			}
+	
+			function invokeDiagnosticEndPoint() {
+				
+				// Create request
+				var xhttp = new XMLHttpRequest();
+					
+				// Set on ready state change
+				xhttp.onreadystatechange = function() {
+						
+						if (this.readyState == 4 && this.status == 200) {
+						
+							// Parse diagnostics as json
+							var diagnosticsStatus = JSON.parse(this.responseText);
+							
+							// Update view
+							updateDiagnosticsTable("diagnostics_ok_tbody", diagnosticsStatus.ok);
+							updateDiagnosticsTable("diagnostics_warn_tbody", diagnosticsStatus.warn);
+							updateDiagnosticsTable("diagnostics_error_tbody", diagnosticsStatus.error);
+							updateDiagnosticsTable("diagnostics_stale_tbody", diagnosticsStatus.stale);
+							
+						}
+						
+					};
+				
+				// Open and send
+				xhttp.open("GET", "/rest/diagnostics/status", true);
+				xhttp.send();
+				
+			}
+
+		</script>
+		
+	</head>
+	
+	<body onload="setInterval(updateDiagnosticsStatus, 1000);">
+	
+		<h1>Geduino Web Teleop</h1>
+		
+		<table>
+			<tbody>
+				<tr>
+					<td><a href="teleop.html">Teleop</a></td>
+					<td><a href="#">Diagnostics</a></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<h2>Diagnostics</h2>
+		
+		<table>
+			<thead>
+				<tr>
+					<th>Ok</th>
+					<th>Warning</th>
+					<th>Error</th>
+					<th>Stale</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<table>
+							<thead>
+								<tr>
+									<th>Component</th>
+									<th>Message</th>
+								</tr>
+							</thead>
+							<tbody id="diagnostics_ok_tbody">
+							</tbody>
+						</table>
+					</td>
+					<td>
+						<table>
+							<thead>
+								<tr>
+									<th>Component</th>
+									<th>Message</th>
+								</tr>
+							</thead>
+							<tbody id="diagnostics_warn_tbody">
+							</tbody>
+						</table>
+					</td>
+					<td>
+						<table>
+							<thead>
+								<tr>
+									<th>Component</th>
+									<th>Message</th>
+								</tr>
+							</thead>
+							<tbody id="diagnostics_error_tbody">
+							</tbody>
+						</table>
+					</td>
+					<td>
+						<table>
+							<thead>
+								<tr>
+									<th>Component</th>
+									<th>Message</th>
+								</tr>
+							</thead>
+							<tbody id="diagnostics_stale_tbody">
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+			
+	</body>
+	
+</html>

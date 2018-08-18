@@ -1,0 +1,18 @@
+{
+  "name": "teleop-web",
+  "version": "1.0.0",
+  "description": "A web teleoperator for Geduino",
+  "main": "main.js",
+  "keywords": [
+    "Geduino",
+    "ROS",
+    "teleop"
+  ],
+  "author": "Alessandro Francescon",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "express": "^4.16.2",
+    "rosnodejs": "^2.1.1",
+    "serve-static": "^1.13.1"
+  }
+}
