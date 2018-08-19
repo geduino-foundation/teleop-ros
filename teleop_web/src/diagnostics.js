@@ -1,14 +1,33 @@
+/*
+ deiagnostics.js
+
+ Copyright (C) 2018 Alessandro Francescon
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 module.exports = {
 	init: function (_nodeHandle) {
 		
 		// Create subscriber
-		const diagnosticsSubscriber = _nodeHandle.subscribe('/diagnostics', 'diagnostic_msgs/DiagnosticArray', function (diagnosticsArray) {
+		const diagnosticsSubscriber = _nodeHandle.subscribe('/diagnostics_agg', 'diagnostic_msgs/DiagnosticArray', function (diagnosticsArray) {
 			
-			// Update diagnostics map
-			updateDiagnosticsMap(diagnosticsArray);
+			// Update diagnostics tree
+			updateDiagnosticsTree(diagnosticsArray);
 			
 			// Update status
-			updateStatus();
+			updateStatus(diagnosticsArray);
+			
 			
 		}, {
 			queueSize: 10,
@@ -16,78 +35,139 @@ module.exports = {
 	    });
 		
 	},
+	getTree: function () {
+		return tree;
+	},
+	getTreeByName: function (name) {
+		
+		// Get path tokens
+		var pathTokens = name.split("/");
+		
+		// Set pointer to root of diagnostics tree
+		var treePtr = tree;
+		
+		for (var index in pathTokens) {
+			
+			// Ignore empty tokens
+			if (pathTokens[index] != "") {
+				
+				if (treePtr.children[pathTokens[index]] != undefined) {
+					
+					// Set pointer
+					treePtr = treePtr.children[pathTokens[index]];
+					
+				}
+				
+			}
+			
+		}
+		
+		return treePtr;
+		
+	},
 	getStatus: function () {
 		return status;
 	}
 }
 
-// The diagnostic map
-var diagnosticsMap = {}
-
-// The diagnostics status
-var status = {
-		level: 3,
-		ok: [],
-		warn: [],
-		error: [],
-		stale: []
-};
-
-const updateDiagnosticsMap = function (diagnosticsArray) {
-	
-	// Update diagnostics map. This is needed if diagnostics are noy synchronized. 
-	diagnosticsArray.status.forEach(function(diagnosticStatus) {
-
-		// Put on map using name as key
-		diagnosticsMap[diagnosticStatus.name] = diagnosticStatus;
-		
-	});
-				
+// The diagnostic tree
+var tree = {
+		children: {}
 }
 
-const updateStatus = function () {
-	
-	// Reset status
-	status.ok.length = 0;
-	status.warn.length = 0;
-	status.error.length = 0;
-	status.stale.length = 0;
+// The global status
+var status = {
+		level: 3,
+		ok: 0,
+		warn: 0,
+		error: 0,
+		stale: 0
+}
 
-	for (var key in diagnosticsMap) {
+
+const updateDiagnosticsTree = function (diagnosticsArray) {
+	
+	// Update diagnostics map. This is needed if diagnostics are noy synchronized. 
+	diagnosticsArray.status.forEach(addToDiagnosticsTree);
+	
+}
+
+const addToDiagnosticsTree = function (diagnosticStatus) {
+	
+	// Get name
+	var name = diagnosticStatus.name;
+	
+	// Get path tokens
+	var pathTokens = name.split("/");
+	
+	// Set pointer to root of diagnostics tree
+	var treePtr = tree;
+	
+	for (var index in pathTokens) {
 		
-		// Create status value
-		var statusValue = {
-				'name' : key,
-				'message' : diagnosticsMap[key].message
+		// Ignore empty tokens
+		if (pathTokens[index] != "") {
+			
+			if (treePtr.children[pathTokens[index]] == undefined) {
+				
+				// Create level if not exists
+				treePtr.children[pathTokens[index]] = {
+						name : pathTokens[index],
+						children : {}
+				};
+				
+			}
+			
+			// Set pointer
+			treePtr = treePtr.children[pathTokens[index]];
+			
 		}
 		
-		switch (diagnosticsMap[key].level) {
-			
+	}
+	
+	// Add status
+	treePtr.status = diagnosticStatus;
+	
+	
+}
+
+const updateStatus = function (diagnosticsArray) {
+	
+	// Reset status
+	status.ok = 0;
+	status.warn = 0;
+	status.error = 0;
+	status.stale = 0;
+	
+	diagnosticsArray.status.forEach(function (diagnosticsStatus) {
+		
+		switch (diagnosticsStatus.level) {
+		
 		case 0:
 			
-			// Add to oks
-			status.ok.push(statusValue);
+			// Increase oks
+			status.ok++;
 			
 			break;
 			
 		case 1:
 			
-			// Add to warns
-			status.warn.push(statusValue);
+			// Increase warns
+			status.warn++;
 			
 			break;
 			
 		case 2:
 			
-			// Add to errors
-			status.errors.push(statusValue);
+			// Increase errors
+			status.error++;
 			
 			break;
 			
 		case 3:
 			
-			// Add to stales
-			status.stale.push(statusValue);
+			// Increase stales
+			status.stale++;
 			
 			break;
 			
@@ -98,7 +178,7 @@ const updateStatus = function () {
 		
 		}
 		
-	}
+	});
 	
 	if (status.stale.length > 0) {
 		

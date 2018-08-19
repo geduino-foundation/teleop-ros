@@ -111,6 +111,34 @@ rest.get('/rest/diagnostics/status', function(req, res) {
 	
 })
 
+// Diagnostics status end-point
+rest.get('/rest/diagnostics/tree/name/*', function(req, res) {
+	
+	// Get diagnostic status
+	var status = diagnostics.getTreeByName(req.params[0]);
+
+	// Set response header
+	res.setHeader('content-type', 'application/json');
+	
+	// Send response
+	res.end(JSON.stringify(status))
+	
+})
+
+// Diagnostics tree end-point
+rest.get('/rest/diagnostics/tree', function(req, res) {
+	
+	// Get diagnostic status
+	var tree = diagnostics.getTree();
+
+	// Set response header
+	res.setHeader('content-type', 'application/json');
+	
+	// Send response
+	res.end(JSON.stringify(tree))
+	
+})
+
 // Static resources
 rest.use(serveStatic('./src/static/', {'index': ['teleop.html']}));
 

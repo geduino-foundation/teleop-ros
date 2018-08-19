@@ -1,5 +1,5 @@
 <!--
- diagnostics.html
+ diagnostics-details.html
 
  Copyright (C) 2018 Alessandro Francescon
  
@@ -49,7 +49,7 @@
 <script type="text/javascript" src="/nipple/nipplejs.min.js">
 </script>
 
-<script type="text/javascript" src="/diagnostics.js">
+<script type="text/javascript" src="/diagnostics-details.js">
 </script>
 
 <style>
@@ -79,8 +79,7 @@
 
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item"><a class="nav-link" href="teleop.html">Teleop</a></li>
-				<li class="nav-item active"><a class="nav-link" href="#">Diagnostics<span
-						class="sr-only">(current)</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="diagnostics.html">Diagnostics</a></li>
 			</ul>
 
 		</div>
@@ -91,20 +90,19 @@
 
 		<div class="container">
 
-			<h1 class="jumbotron-heading">Diagnostics</h1>
-			<p class="lead text-muted">Your robot status</p>
+			<h1 class="jumbotron-heading" id="diagnostics-name">N/A</h1>
+			<p class="lead text-muted" id="diagnostics-message">N/A</p>
 
 			<table class="table table-hover">
 			
 				<thead>
 					<tr>
-						<th scope="col" class="left">Name</th>
-						<th scope="col">Status</th>
-						<th scope="col">&nbsp;</th>
+						<th scope="col" class="left">Key</th>
+						<th scope="col">Value</th>
 					</tr>
 				</thead>
 				
-				<tbody id="diagnostics">
+				<tbody id="diagnostics-values">
 				</tbody>
 				
 			</table>

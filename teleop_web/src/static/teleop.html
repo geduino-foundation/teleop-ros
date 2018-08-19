@@ -1,167 +1,163 @@
+<!--
+ teleop.html
+
+ Copyright (C) 2018 Alessandro Francescon
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <!DOCTYPE html>
 <html>
+
+<head>
+
+<link rel="shortcut icon" href="favicon/favicon.ico">
+<link rel="icon" sizes="16x16 32x32 64x64" href="favicon/favicon.ico">
+<link rel="icon" type="image/png" sizes="196x196" href="favicon/favicon-192.png">
+<link rel="icon" type="image/png" sizes="160x160" href="favicon/favicon-160.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96.png">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon/favicon-64.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16.png">
+<link rel="apple-touch-icon" href="favicon/favicon-57.png">
+<link rel="apple-touch-icon" sizes="114x114" href="favicon/favicon-114.png">
+<link rel="apple-touch-icon" sizes="72x72" href="favicon/favicon-72.png">
+<link rel="apple-touch-icon" sizes="144x144" href="favicon/favicon-144.png">
+<link rel="apple-touch-icon" sizes="60x60" href="favicon/favicon-60.png">
+<link rel="apple-touch-icon" sizes="120x120" href="favicon/favicon-120.png">
+<link rel="apple-touch-icon" sizes="76x76" href="favicon/favicon-76.png">
+<link rel="apple-touch-icon" sizes="152x152" href="favicon/favicon-152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon/favicon-180.png">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="msapplication-TileImage" content="favicon/favicon-144.png">
+<meta name="msapplication-config" content="favicon/browserconfig.xml">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"/>
+
+<script type="text/javascript" src="/nipple/nipplejs.min.js">
+</script>
+
+<script type="text/javascript" src="/teleop.js">
+</script>
+
+<style>
+
+	#joystick {
+	    position: relative;
+	    widht: 300px;
+	    height: 300px;
+	    background-color: #BBBBCC;
+	}
+
+</style>
+
+<title>Web Teleop</title>
+
+</head>
+
+<body onload="init();">
+
+	<nav class="navbar navbar-expand navbar-dark bg-dark">
+
+		<a class="navbar-brand" href="#">ROS Teleop</a>
+
+		<div class="collapse navbar-collapse">
+
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active"><a class="nav-link" href="#">Teleop<span
+						class="sr-only">(current)</span></a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="diagnostics.html">Diagnostics</a></li>
+			</ul>
+
+		</div>
+
+	</nav>
+
+	<section class="jumbotron text-center">
+
+		<div class="container">
+
+			<h1 class="jumbotron-heading">Diagnostics</h1>
+			<p class="lead text-muted">Summary of your robot status</p>
+
+			<div class="container">
+
+				<div class="row">
+					<div class="col-sm">
+						<div class="card text-white text-center bg-success mb-3"
+							style="max-width: 18rem;">
+							<div class="card-header">Ok</div>
+							<div class="card-body">
+								<h2 class="card-title" id="diagnostics_ok_cell">N/A</h2>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm">
+						<div class="card text-white text-center bg-danger mb-3"
+							style="max-width: 18rem;">
+							<div class="card-header">Error</div>
+							<div class="card-body">
+								<h2 class="card-title" id="diagnostics_error_cell">N/A</h2>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm">
+						<div class="card text-white text-center bg-warning mb-3"
+							style="max-width: 18rem;">
+							<div class="card-header">Warning</div>
+							<div class="card-body">
+								<h2 class="card-title" id="diagnostics_warn_cell">N/A</h2>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm">
+						<div class="card text-white text-center bg-primary mb-3"
+							style="max-width: 18rem;">
+							<div class="card-header">Stale</div>
+							<div class="card-body">
+								<h2 class="card-title" id="diagnostics_stale_cell">N/A</h2>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+	</section>
 	
-	<head>  
-		
-		<title>Geduino Web Teleop</title>
-		
-		<script type="text/javascript">
-		
-			function moveForward() {
-				
-				// Invoke move forward endpoint
-				invokeTeleopEndPoint("forward");
-				
-			}
-	
-			function moveBack() {
-				
-				// Invoke move back endpoint
-				invokeTeleopEndPoint("back");
-				
-			}
-	
-			function rotateLeft() {
-				
-				// Invoke rotate left endpoint
-				invokeTeleopEndPoint("left");
-				
-			}
-	
-			function rotateRight() {
-				
-				// Invoke rotate right endpoint
-				invokeTeleopEndPoint("right");
-				
-			}
-	
-			function stop() {
-				
-				// Invoke stop endpoint
-				invokeTeleopEndPoint("stop");
-				
-			}
-	
-			function invokeTeleopEndPoint(cmd) {
-				
-				// Create request
-				var xhttp = new XMLHttpRequest();
-				
-				// Open and send
-				xhttp.open("POST", "/rest/teleop/" + cmd, true);
-				xhttp.send();
-				
-			}
+	<section class="jumbotron text-center">
+
+		<div class="container">
+
+			<h1 class="jumbotron-heading">Teleop</h1>
+			<p class="lead text-muted">Move your robot</p>
 			
-			function updateDiagnosticsStatus() {
-				
-				// Create request
-				var xhttp = new XMLHttpRequest();
-					
-				// Set on ready state change
-				xhttp.onreadystatechange = function() {
-						
-						if (this.readyState == 4 && this.status == 200) {
-						
-							// Parse diagnostics as json
-							var diagnosticsStatus = JSON.parse(this.responseText);
-							
-							// Update view
-							document.getElementById("diagnostics_ok_cell").innerHTML = diagnosticsStatus.ok.length;
-							document.getElementById("diagnostics_warn_cell").innerHTML = diagnosticsStatus.warn.length;
-							document.getElementById("diagnostics_error_cell").innerHTML = diagnosticsStatus.error.length;
-							document.getElementById("diagnostics_stale_cell").innerHTML = diagnosticsStatus.stale.length;
-							
-						}
-						
-					};
-				
-				// Open and send
-				xhttp.open("GET", "/rest/diagnostics/status", true);
-				xhttp.send();
-				
-			}
+			<div id="joystick">
+			</div>
+			
+		</div>
 		
-		</script>
-		
-	</head>
-	
-	<body onload="setInterval(updateDiagnosticsStatus, 1000);">
-	
-		<h1>Geduino Web Teleop</h1>
-		
-		<table>
-			<tbody>
-				<tr>
-					<td><a href="#">Teleop</a></td>
-					<td><a href="diagnostics.html">Diagnostics</a></td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<h2>Status</h2>
-		
-		<table>
-			<tbody>
-				<tr>
-					<td>Ok</td>
-					<td id="diagnostics_ok_cell">N/A</td>
-				</tr>
-				<tr>
-					<td>Warning</td>
-					<td id="diagnostics_warn_cell">N/A</td>
-				</tr>
-				<tr>
-					<td>Error</td>
-					<td id="diagnostics_error_cell">N/A</td>
-				</tr>
-				<tr>
-					<td>Stale</td>
-					<td id="diagnostics_stale_cell">N/A</td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<h2>Teleop</h2>
-		
-		<table>
-			<tbody>
-				<tr>
-					<td>
-						&nbsp;
-					</td>
-					<td align="center">
-						<button type="button" onclick="moveForward()">Forward</button>
-					</td>
-					<td>
-						&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td align="center">
-						<button type="button" onclick="rotateLeft()">Left</button>
-					</td>
-					<td align="center">
-						<button type="button" onclick="stop()">Stop</button>
-					</td>
-					<td align="center">
-						<button type="button" onclick="rotateRight()">Right</button>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						&nbsp;
-					</td>
-					<td align="center">
-						<button type="button" onclick="moveBack()">Back</button>
-					</td>
-					<td>
-						&nbsp;
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		
-	</body>
-	
+	</section>
+
+	<footer class="container">
+		<p>&copy; Geduino Foundation 2018</p>
+    </footer>
+
+</body>
+
 </html>
