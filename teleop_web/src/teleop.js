@@ -65,6 +65,7 @@ module.exports = {
 		cmdVelPublisher = nodeHandle.advertise('/cmd_vel', geometry_msgs.Twist);
 
 		// Set initialized to true
+		initialized = true;
 
 	},
 	forward : function() {

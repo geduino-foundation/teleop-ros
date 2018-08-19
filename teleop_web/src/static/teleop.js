@@ -122,17 +122,17 @@ function init() {
 						// Move forward
 						moveForward();
 					
-					} else if (evt.target.direction == "left") {
+					} else if (evt.target.direction.angle == "left") {
 	
 						// Rotate left
 						rotateLeft();
 						
-					} else if (evt.target.direction == "down") {
+					} else if (evt.target.direction.angle == "down") {
 	
 						// Move back
 						moveBack();
 						
-					} else if (evt.target.direction == "right") {
+					} else if (evt.target.direction.angle == "right") {
 	
 						// Rotate right
 						rotateRight();
