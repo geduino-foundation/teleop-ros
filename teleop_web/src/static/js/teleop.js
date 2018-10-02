@@ -16,82 +16,34 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function moveForward() {
+function sendTeleopCommand(cmd) {
 
-	// Invoke move forward endpoint
-	invokeTeleopEndPoint("forward");
-
-}
-
-function moveBack() {
-
-	// Invoke move back endpoint
-	invokeTeleopEndPoint("back");
-
-}
-
-function rotateLeft() {
-
-	// Invoke rotate left endpoint
-	invokeTeleopEndPoint("left");
-
-}
-
-function rotateRight() {
-
-	// Invoke rotate right endpoint
-	invokeTeleopEndPoint("right");
-
-}
-
-function stop() {
-
-	// Invoke stop endpoint
-	invokeTeleopEndPoint("stop");
-
-}
-
-function invokeTeleopEndPoint(cmd) {
-
-	setTimeout(function() {
-		
-		// Create request
-		var xhttp = new XMLHttpRequest();
+	// Send command
+	$.ajax({
+		cache: false,
+		url: "/rest/teleop/" + cmd,
+		type: "POST"
+	});
 	
-		// Open and send
-		xhttp.open("POST", "/rest/teleop/" + cmd, true);
-		xhttp.send();
-	
-	}, 0);
-
 }
 
 function updateDiagnosticsStatus() {
 
-	// Create request
-	var xhttp = new XMLHttpRequest();
-
-	// Set on ready state change
-	xhttp.onreadystatechange = function() {
-
-		if (this.readyState == 4 && this.status == 200) {
-
-			// Parse diagnostics as json
-			var diagnosticsStatus = JSON.parse(this.responseText);
-
+	// Ask for diagnostic status
+	$.ajax({
+		cache: false,
+		url: "/rest/diagnostics/status",
+		type: "GET",
+		success: function (diagnosticsStatus) {
+			
 			// Update view
-			document.getElementById("diagnostics_ok_cell").innerHTML = diagnosticsStatus.ok;
-			document.getElementById("diagnostics_warn_cell").innerHTML = diagnosticsStatus.warn;
-			document.getElementById("diagnostics_error_cell").innerHTML = diagnosticsStatus.error;
-			document.getElementById("diagnostics_stale_cell").innerHTML = diagnosticsStatus.stale;
-
+			$("#diagnostics_ok_cell").text(diagnosticsStatus.ok);
+			$("#diagnostics_warn_cell").text(diagnosticsStatus.warn);
+			$("#diagnostics_error_cell").text(diagnosticsStatus.error);
+			$("#diagnostics_stale_cell").text(diagnosticsStatus.stale);
+			
 		}
-
-	};
-
-	// Open and send
-	xhttp.open("GET", "/rest/diagnostics/status", true);
-	xhttp.send();
+	});
 
 }
 
@@ -120,22 +72,22 @@ function init() {
 					if (evt.target.direction.angle == "up") {
 
 						// Move forward
-						moveForward();
+						sendTeleopCommand("forward");
 					
 					} else if (evt.target.direction.angle == "left") {
 	
 						// Rotate left
-						rotateLeft();
+						sendTeleopCommand("left");
 						
 					} else if (evt.target.direction.angle == "down") {
 	
 						// Move back
-						moveBack();
+						sendTeleopCommand("back");
 						
 					} else if (evt.target.direction.angle == "right") {
 	
 						// Rotate right
-						rotateRight();
+						sendTeleopCommand("rigth");
 						
 					}
 				
@@ -144,7 +96,7 @@ function init() {
 			} else if (evt.type == "end") {
 
 				// Stop
-				stop();
+				sendTeleopCommand("stop");
 
 			}
 

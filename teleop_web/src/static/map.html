@@ -1,5 +1,5 @@
 <!--
- teleop.html
+ map.html
 
  Copyright (C) 2018 Alessandro Francescon
  
@@ -52,17 +52,34 @@
 <script type="text/javascript" src="/nipple/nipplejs.min.js">
 </script>
 
-<script type="text/javascript" src="/js/teleop.js">
+<script type="text/javascript" src="/js/map.js">
 </script>
 
 <style>
 
 	#joystick {
 	    position: relative;
-	    height: 300px;
 	    background-color: #BBBBCC;
 	}
-
+	
+	#pose {
+		position: relative;
+		display: flex;
+	}
+	
+	#map {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	    image-rendering: optimizeSpeed;
+	    image-rendering: -moz-crisp-edges;
+	    image-rendering: -o-crisp-edges;
+	    image-rendering: -webkit-optimize-contrast;
+	    image-rendering: optimize-contrast;
+	    image-rendering: pixelated;
+	    -ms-interpolation-mode: nearest-neighbor;
+	}
+	
 </style>
 
 <title>Web Teleop</title>
@@ -78,12 +95,11 @@
 		<div class="collapse navbar-collapse">
 
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="#">Teleop<span
-						class="sr-only">(current)</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="teleop.html">Teleop</a></li>
 				<li class="nav-item"><a class="nav-link"
 					href="diagnostics.html">Diagnostics</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="map.html">Map</a></li>
+				<li class="nav-item active"><a class="nav-link" href="#">Map<span
+						class="sr-only">(current)</span></a></li>
 			</ul>
 
 		</div>
@@ -94,74 +110,22 @@
 
 		<div class="container">
 
-			<h1 class="jumbotron-heading">Diagnostics</h1>
-			<p class="lead text-muted">Summary of your robot status</p>
+			<h1 class="jumbotron-heading">Map</h1>
+			<p class="lead text-muted">Your robot map</p>
 
 			<div class="container">
-
-				<div class="row">
-					<div class="col-sm">
-						<div class="card text-white text-center bg-success mb-3"
-							style="max-width: 18rem;">
-							<div class="card-header">Ok</div>
-							<div class="card-body">
-								<h2 class="card-title" id="diagnostics_ok_cell">N/A</h2>
-							</div>
+				<div class="row justify-content-center">
+					<div class="col-sm-8">
+						<div id="joystick">
+							<img id="map" class="image-container-center img-responsive">
+							<img id="pose" src="/img/pose-icon-50x50.png" style="display: none;">
 						</div>
-					</div>
-					<div class="col-sm">
-						<div class="card text-white text-center bg-danger mb-3"
-							style="max-width: 18rem;">
-							<div class="card-header">Error</div>
-							<div class="card-body">
-								<h2 class="card-title" id="diagnostics_error_cell">N/A</h2>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm">
-						<div class="card text-white text-center bg-warning mb-3"
-							style="max-width: 18rem;">
-							<div class="card-header">Warning</div>
-							<div class="card-body">
-								<h2 class="card-title" id="diagnostics_warn_cell">N/A</h2>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm">
-						<div class="card text-white text-center bg-primary mb-3"
-							style="max-width: 18rem;">
-							<div class="card-header">Stale</div>
-							<div class="card-body">
-								<h2 class="card-title" id="diagnostics_stale_cell">N/A</h2>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-			</div>
-		</div>
-
-	</section>
-	
-	<section class="jumbotron text-center">
-
-		<div class="container">
-
-			<h1 class="jumbotron-heading">Teleop</h1>
-			<p class="lead text-muted">Move your robot</p>
-			
-            <p>
-                  <button type="button" class="btn btn-danger" onclick="stop();">&gt;&gt;&gt; Emergency Stop &lt;&lt;&lt;</button>
-            </p>
-
-			<div class="row justify-content-center">
-				<div id="joystick" class="col-sm-8">
-				</div>
+	    			</div>
+	    		</div>
     		</div>
 			
 		</div>
-		
+
 	</section>
 
 	<footer class="container">

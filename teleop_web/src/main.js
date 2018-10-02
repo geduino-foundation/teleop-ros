@@ -21,9 +21,11 @@
 // Requires
 const rosnodejs = require('rosnodejs');
 const express = require('express');
-const serveStatic = require('serve-static')
+const serveStatic = require('serve-static');
 const teleop = require('./teleop');
 const diagnostics = require('./diagnostics');
+const map = require('./map');
+const bodyParser = require('body-parser');
 
 // Init node
 rosnodejs
@@ -36,11 +38,16 @@ rosnodejs
 		// Init diagnostics
 		diagnostics.init(nodeHandle);
 		
+		// Init map
+		map.init(nodeHandle);
+		
 	});
-	
 
 // Rest end points
 const rest = express();
+
+rest.use(bodyParser.json());
+rest.use(bodyParser.urlencoded({ extended: true })); 
 
 // Teleop forward end-point
 rest.post('/rest/teleop/forward', function(req, res) {
@@ -107,7 +114,7 @@ rest.get('/rest/diagnostics/status', function(req, res) {
 	res.setHeader('content-type', 'application/json');
 	
 	// Send response
-	res.end(JSON.stringify(status))
+	res.end(JSON.stringify(status));
 	
 })
 
@@ -121,7 +128,7 @@ rest.get('/rest/diagnostics/tree/name/*', function(req, res) {
 	res.setHeader('content-type', 'application/json');
 	
 	// Send response
-	res.end(JSON.stringify(status))
+	res.end(JSON.stringify(status));
 	
 })
 
@@ -135,7 +142,62 @@ rest.get('/rest/diagnostics/tree', function(req, res) {
 	res.setHeader('content-type', 'application/json');
 	
 	// Send response
-	res.end(JSON.stringify(tree))
+	res.end(JSON.stringify(tree));
+	
+})
+
+// Map data end-point
+rest.get('/rest/map/data', function(req, res) {
+	
+	map.onceMapReceived(function(mapData) {
+		
+		// Set response header
+		res.setHeader('content-type', 'application/json');
+		
+		// Send response
+		res.end(JSON.stringify(mapData));
+		
+	});
+	
+})
+
+// Map pose end-point
+rest.get('/rest/map/pose', function(req, res) {
+	
+	map.onPoseReceived(function(pose) {
+		
+		// Set response header
+		res.setHeader('content-type', 'application/json');
+		
+		// Send response
+		res.end(JSON.stringify(pose));
+		
+	});
+	
+})
+
+// Map png end-point
+rest.get('/rest/map/png/:id', function(req, res) {
+	
+	// Get map
+	var mapPng = map.getMap(req.params.id);
+		
+	// Set response header
+	res.setHeader('content-type', 'image/png');
+		
+	// Send as response
+	mapPng.pack().pipe(res);
+	
+})
+
+// Map goal end-point
+rest.post('/rest/map/goal', function(req, res) {
+	
+	// Set goal
+	map.goal(req.body);
+	
+	// End request
+	res.end();
 	
 })
 

@@ -35,12 +35,6 @@ module.exports = {
 				// Log
 				console.log("Linear speed set to %d m/s", linear);
 
-			})
-			.catch(function(reason) {
-
-				// Log
-				console.log('Unable to get param for linear speed: %s', reason);
-
 			});
 
 		// Get angular speed
@@ -52,12 +46,6 @@ module.exports = {
 
 				// Log
 				console.log("Angular speed set to %d rad/s", angular);
-
-			})
-			.catch(function(reason) {
-
-				// Log
-				console.log('Unable to get param for angular speed: %s', reason);
 
 			});
 

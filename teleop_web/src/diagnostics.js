@@ -26,8 +26,7 @@ module.exports = {
 			updateDiagnosticsTree(diagnosticsArray);
 			
 			// Update status
-			updateStatus(diagnosticsArray);
-			
+			updateDiagnosticsStatus(diagnosticsArray);
 			
 		}, {
 			queueSize: 10,
@@ -84,7 +83,6 @@ var status = {
 		stale: 0
 }
 
-
 const updateDiagnosticsTree = function (diagnosticsArray) {
 	
 	// Update diagnostics map. This is needed if diagnostics are noy synchronized. 
@@ -92,10 +90,10 @@ const updateDiagnosticsTree = function (diagnosticsArray) {
 	
 }
 
-const addToDiagnosticsTree = function (diagnosticStatus) {
+const addToDiagnosticsTree = function (diagnosticsStatus) {
 	
 	// Get name
-	var name = diagnosticStatus.name;
+	var name = diagnosticsStatus.name;
 	
 	// Get path tokens
 	var pathTokens = name.split("/");
@@ -126,12 +124,12 @@ const addToDiagnosticsTree = function (diagnosticStatus) {
 	}
 	
 	// Add status
-	treePtr.status = diagnosticStatus;
+	treePtr.status = diagnosticsStatus;
 	
 	
 }
 
-const updateStatus = function (diagnosticsArray) {
+const updateDiagnosticsStatus = function (diagnosticsArray) {
 	
 	// Reset status
 	status.ok = 0;
