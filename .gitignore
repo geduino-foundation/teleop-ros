@@ -121,3 +121,6 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Angular js
+.settings/
