@@ -204,7 +204,7 @@ rest.post('/rest/map/goal', function(req, res) {
 })
 
 // Static resources
-rest.use(serveStatic('./src/static/', {'index': ['teleop.html']}));
+rest.use(serveStatic(__dirname + '/static/', {'index': ['teleop.html']}));
 
 // Start server
 const server = rest.listen(8080, function () {
