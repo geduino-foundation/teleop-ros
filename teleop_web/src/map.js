@@ -24,7 +24,7 @@ module.exports = {
 	init: function (nodeHandle) {
 		
 		// Get free threshold
-		nodeHandle.getParam('~/free_threshold')
+		nodeHandle.getParam('free_threshold')
 			.then(function(_freeThreshold) {
 
 				// Set free threshold
@@ -33,10 +33,11 @@ module.exports = {
 				// Log
 				console.log("Free threshold set to %d%", freeThreshold);
 
-			});
+			})
+			.catch(function(reason) {});
 		
 		// Get map frame
-		nodeHandle.getParam('~/map_frame_id')
+		nodeHandle.getParam('map_frame_id')
 			.then(function(_mapFrameId) {
 
 				// Set map frame id
@@ -45,11 +46,12 @@ module.exports = {
 				// Log
 				console.log("Map frame id set to %s%", mapFrameId);
 
-			});
+			})
+			.catch(function(reason) {});
 				
 		// Create subscriber
 		const mapSubscriber = nodeHandle.subscribe(
-				'/rtabmap/proj_map',
+				'map',
 				'nav_msgs/OccupancyGrid', 
 				updateMap,
 				{
@@ -59,7 +61,7 @@ module.exports = {
 		
 		// Create subscriber
 		const poseSubscriber = nodeHandle.subscribe(
-				'/robot_pose',
+				'robot_pose',
 				'geometry_msgs/PoseStamped', 
 				updatePose,
 				{
@@ -68,7 +70,7 @@ module.exports = {
 			    });
 		
 		// The goal publisher
-		goalPublisher = nodeHandle.advertise('/move_base_simple/goal', geometry_msgs.PoseStamped);
+		goalPublisher = nodeHandle.advertise('/goal', geometry_msgs.PoseStamped);
 		
 	},
 	onceMapReceived: function (callback) {

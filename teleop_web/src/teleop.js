@@ -26,7 +26,7 @@ module.exports = {
 		nodeHandle = _nodeHandle;
 
 		// Get linear speed
-		nodeHandle.getParam('~/linear')
+		nodeHandle.getParam('linear')
 			.then(function(_linear) {
 
 				// Set linear
@@ -35,10 +35,11 @@ module.exports = {
 				// Log
 				console.log("Linear speed set to %d m/s", linear);
 
-			});
+			})
+			.catch(function(reason) {});
 
 		// Get angular speed
-		nodeHandle.getParam('~/angular')
+		nodeHandle.getParam('angular')
 			.then(function(_angular) {
 
 				// Set angular
@@ -47,7 +48,8 @@ module.exports = {
 				// Log
 				console.log("Angular speed set to %d rad/s", angular);
 
-			});
+			})
+			.catch(function(reason) {});
 
 		// The cmd_vel publisher
 		cmdVelPublisher = nodeHandle.advertise('/cmd_vel', geometry_msgs.Twist);
