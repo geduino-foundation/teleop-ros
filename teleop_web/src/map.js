@@ -24,7 +24,7 @@ module.exports = {
 	init: function (nodeHandle) {
 		
 		// Get free threshold
-		nodeHandle.getParam('free_threshold')
+		nodeHandle.getParam('teleop_web/free_threshold')
 			.then(function(_freeThreshold) {
 
 				// Set free threshold
@@ -37,7 +37,7 @@ module.exports = {
 			.catch(function(reason) {});
 		
 		// Get map frame
-		nodeHandle.getParam('map_frame_id')
+		nodeHandle.getParam('teleop_web/map_frame_id')
 			.then(function(_mapFrameId) {
 
 				// Set map frame id

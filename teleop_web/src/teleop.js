@@ -26,7 +26,7 @@ module.exports = {
 		nodeHandle = _nodeHandle;
 
 		// Get linear speed
-		nodeHandle.getParam('linear')
+		nodeHandle.getParam('teleop_web/linear_speed')
 			.then(function(_linear) {
 
 				// Set linear
@@ -39,7 +39,7 @@ module.exports = {
 			.catch(function(reason) {});
 
 		// Get angular speed
-		nodeHandle.getParam('angular')
+		nodeHandle.getParam('teleop_web/angular_speed')
 			.then(function(_angular) {
 
 				// Set angular
