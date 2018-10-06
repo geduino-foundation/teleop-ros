@@ -87,7 +87,7 @@ function init() {
 					} else if (evt.target.direction.angle == "right") {
 	
 						// Rotate right
-						sendTeleopCommand("rigth");
+						sendTeleopCommand("right");
 						
 					}
 				
